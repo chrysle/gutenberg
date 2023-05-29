@@ -8,13 +8,12 @@ import abc
 import os
 import shutil
 import tempfile
-from contextlib import closing
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
+from urllib.request import urlopen
 
-from gutenberg.acquire.metadata import SleepycatMetadataCache
-from gutenberg.acquire.metadata import set_metadata_cache
 import gutenberg.acquire.text
-
+from gutenberg.acquire.metadata import (SleepycatMetadataCache,
+                                        set_metadata_cache)
 
 INTEGRATION_TESTS_ENABLED = bool(os.getenv('GUTENBERG_RUN_INTEGRATION_TESTS'))
 
@@ -87,3 +86,22 @@ def always_throw(exception_type):
     def wrapped(*args, **kwargs):
         raise exception_type
     return wrapped
+
+
+def detect_mirror():
+    """Detects working mirrors of Project Gutenberg.
+
+    Returns:
+       string: First working mirror found
+    """
+
+    mirrors = (
+        "http://www.mirrorservice.org/sites/ftp.ibiblio.org/pub/docs/books/gutenberg/", "http://eremita.di.uminho.pt/gutenberg/", 
+        "http://mirror.csclub.uwaterloo.ca/gutenberg/", "https://gutenberg.nabasny.com/", 
+        "https://www.gute1nberg.org/dirs/", "https://mirror2.sandyriver.net/pub/gutenberg", "http://mirrors.xmission.com/gutenberg/", 
+        "https://aleph.gutenberg.org/", "https://gutenberg.pglaf.org/")
+    
+    for mirror in mirrors:
+        if urlopen(mirror).getcode() == 200:
+            return mirror
+            break 

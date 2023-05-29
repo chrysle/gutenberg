@@ -3,22 +3,17 @@
 
 
 import itertools
-import unittest
 import re
+import unittest
 
 import responses
 
 from gutenberg._domain_model.exceptions import UnknownDownloadUriException
-from gutenberg._domain_model.vocabulary import DCTERMS
-from gutenberg._domain_model.vocabulary import PGTERMS
+from gutenberg._domain_model.vocabulary import DCTERMS, PGTERMS
+from gutenberg.acquire import load_etext, load_metadata, text
 from tests._sample_metadata import SampleMetaData
-from tests._util import INTEGRATION_TESTS_ENABLED
-from tests._util import MockMetadataMixin
-from tests._util import MockTextMixin
-
-from gutenberg.acquire import text
-from gutenberg.acquire import load_etext
-from gutenberg.acquire import load_metadata
+from tests._util import (INTEGRATION_TESTS_ENABLED, MockMetadataMixin,
+                         MockTextMixin, detect_mirror)
 
 
 class TestLoadMetadata(MockMetadataMixin, unittest.TestCase):
@@ -34,8 +29,8 @@ class TestLoadMetadata(MockMetadataMixin, unittest.TestCase):
 
 class TestLoadEtext(MockTextMixin, unittest.TestCase):
     def test_load_etext(self):
-        loaders = (lambda etextno: load_etext(etextno, refresh_cache=True),
-                   lambda etextno: load_etext(etextno, refresh_cache=False))
+        loaders = (lambda etextno: load_etext(etextno, refresh_cache=True, mirror=detect_mirror()),
+                   lambda etextno: load_etext(etextno, refresh_cache=False, mirror=detect_mirror()))
         testcases = (
             SampleMetaData.for_etextno(2701),   # newstyle identifier
             SampleMetaData.for_etextno(5),      # oldstyle identifier
