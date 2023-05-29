@@ -9,7 +9,8 @@ import os
 import shutil
 import tempfile
 from contextlib import closing, contextmanager
-from urllib.request import urlopen
+
+import requests
 
 import gutenberg.acquire.text
 from gutenberg.acquire.metadata import (SleepycatMetadataCache,
@@ -102,6 +103,6 @@ def detect_mirror():
         "https://aleph.gutenberg.org/", "https://gutenberg.pglaf.org/")
     
     for mirror in mirrors:
-        if urlopen(mirror).getcode() == 200:
+        if requests.head(mirror).status_code == 200:
             return mirror
             break 
