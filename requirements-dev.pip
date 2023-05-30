@@ -1,4 +1,5 @@
 coverage
 flake8
+isort
 nose2
 responses

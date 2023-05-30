@@ -28,7 +28,9 @@ jobs:
         run: docker build --build-arg PYTHON_VERSION="${{ matrix.python }}" -t gutenberg:test .
 
       - name: lint
-        run: docker run -v $PWD:/app --tmpfs /data gutenberg:test flake8 gutenberg
+        run: |
+          docker run -v $PWD:/app --tmpfs /data gutenberg:test flake8 gutenberg
+          docker run -v $PWD:/app --tmpfs /data gutenberg:test isort gutenberg
 
       - name: test
         run: |
