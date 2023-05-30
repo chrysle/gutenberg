@@ -42,8 +42,8 @@ An HTTP interface to this package exists too.
 Installation
 ============
 
-This project is on `PyPI <https://pypi.python.org/pypi/Gutenberg>`_, so I'd
-recommend that you just install everything from there using your favourite
+This project is on `PyPI <https://pypi.python.org/pypi/Gutenberg>`_, so it is 
+recommended to just install everything from there using your favourite
 Python package manager.
 
 .. sourcecode :: sh
@@ -57,23 +57,27 @@ this repository:
 
     git clone https://github.com/c-w/Gutenberg.git
 
-Now, you should probably install the dependencies for the package and verify
+Now, install the dependencies for the package into a 
+`virtualenv <https://virtualenv.pypa.io/en/latest/>`_ and verify
 your checkout by running the tests.
 
 .. sourcecode :: sh
 
-    cd Gutenberg
+    cd Gutenberg/
 
-    virtualenv --no-site-packages virtualenv
+    python -m pip install virtualenv
+    python -m virtualenv virtualenv
     source virtualenv/bin/activate
-    pip install -r requirements-dev.pip
-    pip install .
+    python -m pip install -r requirements-dev.pip
+    python -m pip install .
 
     nose2
 
 Alternatively, you can also run the project via Docker:
 
 .. sourcecode :: sh
+
+    cd Gutenberg/
 
     docker build -t gutenberg .
 
@@ -93,39 +97,25 @@ Linux
 *****
 
 On Linux, you can usually install BSD-DB using your distribution's package
-manager. For example, on Ubuntu, you can use apt-get:
+manager. For example, on Ubuntu, use ``apt``:
 
 .. sourcecode :: sh
 
-    sudo apt-get install libdb++-dev
+    sudo apt update
+    sudo apt install libdb++-dev
     export BERKELEYDB_DIR=/usr
-    pip install .
+    python -m pip install .
 
 MacOS
 *****
 
-On Mac, you can install BSD-DB using `homebrew <https://homebrew.sh/>`_:
+On Mac, you can install BSD-DB using `Homebrew <https://brew.sh/>`_:
 
 .. sourcecode :: sh
 
     brew install berkeley-db4
-    pip install .
+    python -m pip install .
 
-Windows
-*******
-
-On Windows, it's easiest to download a pre-compiled version of BSD-DB from
-`pythonlibs <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_ which works great.
-
-For example, if you have Python 3.5 on a 64-bit version of Windows, you
-should download :code:`bsddb3‑6.2.1‑cp35‑cp35m‑win_amd64.whl`.
-
-After you download the wheel, install it and you're good to go:
-
-.. sourcecode :: bash
-
-    pip install bsddb3‑6.2.1‑cp35‑cp35m‑win_amd64.whl
-    pip install .
 
 License conflicts
 *****************
@@ -138,7 +128,7 @@ of the AGPL3 license, you'll have to install an ealier version of BSD-DB
 project under AGPL3 (or if you have a commercial license for BSD-DB), set the
 following environment variable before attempting to install BSD-DB:
 
-.. sourcecode :: bash
+.. sourcecode :: sh
 
     YES_I_HAVE_THE_RIGHT_TO_USE_THIS_BERKELEY_DB_VERSION=1
 
@@ -146,7 +136,8 @@ following environment variable before attempting to install BSD-DB:
 Apache Jena Fuseki
 ------------------
 
-As an alternative to the BSD-DB backend, this package can also use `Apache Jena Fuseki <https://jena.apache.org/documentation/fuseki2/>`_
+As an alternative to the BSD-DB backend, this package can also use 
+`Apache Jena Fuseki <https://jena.apache.org/documentation/fuseki2/>`_
 for the metadata store. The Apache Jena Fuseki backend is activated by
 setting the :code:`GUTENBERG_FUSEKI_URL` environment variable to the HTTP
 endpoint at which Fuseki is listening. If the Fuseki server has HTTP basic
@@ -156,7 +147,7 @@ variables.
 
 For local development, the Fuseki server can be run via Docker:
 
-.. sourcecode :: bash
+.. sourcecode :: sh
 
     docker run \
         --detach \
@@ -169,6 +160,25 @@ For local development, the Fuseki server can be run via Docker:
     export GUTENBERG_FUSEKI_URL=http://localhost:3030/ds
     export GUTENBERG_FUSEKI_USER=admin
     export GUTENBERG_FUSEKI_PASSWORD=some-password
+
+
+Tests
+=====
+
+Tests are run using the `nose2 <https://docs.nose2.io/en/latest/index.html>`_ framework.
+
+Run all the tests using the following command:
+
+.. sourcecode ::sh
+
+    nose2 --verbose
+
+You can also run single tests. This example runs the tests in the :code:`TestLoadMetadata`
+class in :doc:`test_acquire.py <tests/test_acquire.py>`:
+
+.. sourcecode ::sh
+
+    nose2 --verbose tests.test_acquire.TestLoadMetadata 
 
 
 Usage
@@ -226,6 +236,7 @@ To populate the cache:
 .. sourcecode :: python
 
     from gutenberg.acquire import get_metadata_cache
+
     cache = get_metadata_cache()
     cache.populate()
 
@@ -253,5 +264,5 @@ This project *deliberately* does not include any natural language processing
 functionality. Consuming and processing the text is the responsibility of the
 client; this library merely focuses on offering a simple and easy to use
 interface to the works in the Project Gutenberg corpus.  Any linguistic
-processing can easily be done client-side e.g. using the `TextBlob
-<http://textblob.readthedocs.org>`_ library.
+processing can easily be done client-side e.g. using the 
+`TextBlob <http://textblob.readthedocs.org>`_ library.
