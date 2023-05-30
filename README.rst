@@ -169,14 +169,14 @@ Tests are run using the `nose2 <https://docs.nose2.io/en/latest/index.html>`_ fr
 
 Run all the tests using the following command:
 
-.. sourcecode ::sh
+.. sourcecode :: sh
 
     nose2 --verbose
 
 You can also run single tests. This example runs the tests in the :code:`TestLoadMetadata`
-class in :doc:`test_acquire.py <tests/test_acquire.py>`:
+class in :doc:`tests/test_acquire.py`:
 
-.. sourcecode ::sh
+.. sourcecode :: sh
 
     nose2 --verbose tests.test_acquire.TestLoadMetadata 
 
