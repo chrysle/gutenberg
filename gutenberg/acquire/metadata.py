@@ -165,7 +165,8 @@ class MetadataCache(metaclass=abc.ABCMeta):
                 if pg_rdf_regex.search(item.name):
                     with disable_logging():
                         extracted = metadata_archive.extractfile(item)
-                        graph = Graph().parse(extracted, format='application/rdf+xml')
+                        graph = Graph().parse(extracted,
+                                              format='application/rdf+xml')
                     for fact in graph:
                         if cls._metadata_is_invalid(fact):
                             logging.info('skipping invalid triple %s', fact)
@@ -174,8 +175,9 @@ class MetadataCache(metaclass=abc.ABCMeta):
 
 
 class BerkeleyDBMetadataCache(MetadataCache):
-    """Default cache manager implementation, based on BerkeleyDB plugin/Berkeley DB.
-     BerkeleyDB is natively supported by RDFlib so this cache is reasonably fast.
+    """Default cache manager implementation, based on
+    BerkeleyDB plugin/Berkeley DB. BerkeleyDB is natively
+    supported by RDFlib so this cache is reasonably fast.
 
     """
 
