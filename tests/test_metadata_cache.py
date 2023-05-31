@@ -11,7 +11,7 @@ from urllib.request import pathname2url
 from gutenberg.acquire.metadata import CacheAlreadyExistsException
 from gutenberg.acquire.metadata import InvalidCacheException
 from gutenberg.acquire.metadata import FusekiMetadataCache
-from gutenberg.acquire.metadata import SleepycatMetadataCache
+from gutenberg.acquire.metadata import BerkeleyDBMetadataCache
 from gutenberg.acquire.metadata import SqliteMetadataCache
 from gutenberg.acquire.metadata import set_metadata_cache
 from gutenberg.query import get_metadata
@@ -97,10 +97,10 @@ class TestFuseki(MetadataCache, unittest.TestCase):
         self.cache.catalog_source = _sample_metadata_catalog_source()
 
 
-class TestSleepycat(MetadataCache, unittest.TestCase):
+class TestBerkeleyDB(MetadataCache, unittest.TestCase):
     def setUp(self):
         self.local_storage = tempfile.mktemp()
-        self.cache = SleepycatMetadataCache(self.local_storage)
+        self.cache = BerkeleyDBMetadataCache(self.local_storage)
         self.cache.catalog_source = _sample_metadata_catalog_source()
 
 

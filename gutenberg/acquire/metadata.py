@@ -41,6 +41,7 @@ class MetadataCache(metaclass=abc.ABCMeta):
     """Super-class for all metadata cache implementations.
 
     """
+
     def __init__(self, store, cache_uri):
         self.store = store
         self.cache_uri = cache_uri
@@ -164,7 +165,7 @@ class MetadataCache(metaclass=abc.ABCMeta):
                 if pg_rdf_regex.search(item.name):
                     with disable_logging():
                         extracted = metadata_archive.extractfile(item)
-                        graph = Graph().parse(extracted)
+                        graph = Graph().parse(extracted, format='application/rdf+xml')
                     for fact in graph:
                         if cls._metadata_is_invalid(fact):
                             logging.info('skipping invalid triple %s', fact)
@@ -172,15 +173,16 @@ class MetadataCache(metaclass=abc.ABCMeta):
                             yield fact
 
 
-class SleepycatMetadataCache(MetadataCache):
-    """Default cache manager implementation, based on Sleepycat/Berkeley DB.
-    Sleepycat is natively supported by RDFlib so this cache is reasonably fast.
+class BerkeleyDBMetadataCache(MetadataCache):
+    """Default cache manager implementation, based on BerkeleyDB plugin/Berkeley DB.
+     BerkeleyDB is natively supported by RDFlib so this cache is reasonably fast.
 
     """
+
     def __init__(self, cache_location):
         self._check_can_be_instantiated()
         cache_uri = cache_location
-        store = 'Sleepycat'
+        store = 'BerkeleyDB'
         MetadataCache.__init__(self, store, cache_uri)
 
     def _populate_setup(self):
@@ -190,11 +192,11 @@ class SleepycatMetadataCache(MetadataCache):
     @classmethod
     def _check_can_be_instantiated(cls):
         try:
-            from bsddb3 import db
+            from berkeleydb import db
         except ImportError:
             db = None
         if db is None:
-            raise InvalidCacheException('no install of bsddb3 found')
+            raise InvalidCacheException('No install of berkeleydb found.')
         del db
 
 
@@ -347,7 +349,7 @@ def _create_metadata_cache(cache_location):
         return FusekiMetadataCache(cache_location, cache_url)
 
     try:
-        return SleepycatMetadataCache(cache_location)
+        return BerkeleyDBMetadataCache(cache_location)
     except InvalidCacheException:
         logging.warning('Unable to create cache based on BSD-DB. '
                         'Falling back to SQLite backend. '

@@ -167,14 +167,14 @@ Tests
 
 Tests are run using the `nose2 <https://docs.nose2.io/en/latest/index.html>`_ framework.
 
-Run all the tests using the following command:
+Start off all the tests using the following command:
 
 .. sourcecode :: sh
 
     nose2 --verbose
 
 You can also run single tests. This example runs the tests in the :code:`TestLoadMetadata`
-class in :doc:`tests/test_acquire.py`:
+class in :download:`test_acquire.py </tests/test_acquire.py>`:
 
 .. sourcecode :: sh
 
@@ -244,7 +244,7 @@ To populate the cache:
 If you need more fine-grained control over the cache (e.g. where it's stored or
 which backend is used), you can use the :code:`set_metadata_cache` function to switch
 out the backend of the cache before you populate it. For example, to use the
-Sqlite cache backend instead of the default Sleepycat backend and store the
+Sqlite cache backend instead of the default Berkeley DB backend and store the
 cache at a custom location, you'd do the following:
 
 .. sourcecode :: python
