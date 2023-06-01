@@ -211,7 +211,8 @@ class FusekiMetadataCache(MetadataCache):
         MetadataCache.__init__(self, store, cache_url)
         user = user or os.getenv('GUTENBERG_FUSEKI_USER')
         password = password or os.getenv('GUTENBERG_FUSEKI_PASSWORD')
-        self.graph.store.setCredentials(user, password)
+        # self.graph.store.setCredentials(user, password)
+        self.graph.store.auth = (user, password)
         self._cache_marker = cache_location
 
     def _populate_setup(self):
