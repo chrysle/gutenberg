@@ -13,7 +13,7 @@ from contextlib import closing, contextmanager
 import requests
 
 import gutenberg.acquire.text
-from gutenberg.acquire.metadata import (SleepycatMetadataCache,
+from gutenberg.acquire.metadata import (BerkeleyDBMetadataCache,
                                         set_metadata_cache)
 
 INTEGRATION_TESTS_ENABLED = bool(os.getenv('GUTENBERG_RUN_INTEGRATION_TESTS'))
@@ -36,7 +36,7 @@ class MockMetadataMixin(metaclass=abc.ABCMeta):
         raise NotImplementedError  # pragma: no cover
 
     def setUp(self):
-        self.cache = _SleepycatMetadataCacheForTesting(self.sample_data, 'nt')
+        self.cache = _BerkeleyDBMetadataCacheForTesting(self.sample_data, 'nt')
         self.cache.populate()
         set_metadata_cache(self.cache)
 
@@ -45,14 +45,14 @@ class MockMetadataMixin(metaclass=abc.ABCMeta):
         self.cache.delete()
 
 
-class _SleepycatMetadataCacheForTesting(SleepycatMetadataCache):
+class _BerkeleyDBMetadataCacheForTesting(BerkeleyDBMetadataCache):
     def __init__(self, sample_data_factory, data_format):
-        SleepycatMetadataCache.__init__(self, tempfile.mktemp())
+        BerkeleyDBMetadataCache.__init__(self, tempfile.mktemp())
         self.sample_data_factory = sample_data_factory
         self.data_format = data_format
 
     def populate(self):
-        SleepycatMetadataCache.populate(self)
+        BerkeleyDBMetadataCache.populate(self)
 
         data = '\n'.join(item.rdf() for item in self.sample_data_factory())
 
